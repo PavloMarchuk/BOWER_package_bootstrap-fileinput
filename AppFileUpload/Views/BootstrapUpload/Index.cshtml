@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+<link href="~/lib/bootstrap-fileinput/css/fileinput.css" rel="stylesheet" />
+<h2>Bootstrap Fileinput</h2>
+
+
+<input id="input-702" name="manyFileUpload" type="file" multiple class="file-loading" 
+       data-id="1">
+ @*data-id="1" = EmployeeId*@
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script src="~/lib/bootstrap-fileinput/js/fileinput.js"></script>  
+    
+    <script type="text/javascript">
+        var id = $('#input-702').attr('data-id');
+
+        $(function () { GetUrl(id); });
+
+        function GetUrl(id) {
+            var s = "";
+			$.ajax({				
+                url: '@Url.Action("GetPathPhotoGood", "Photo")',
+                type: "GET",
+                data: {id:id},
+                success: function (result) {
+                    $("#input-702").fileinput({
+                        initialPreview: result
+                    });
+                }
+			});
+
+			
+            $("#input-702").fileinput({
+
+                //uploadUrl: "/Upload/ManyFileUpload?id=" + id, // server upload action
+                uploadUrl: "/Upload/ManyFileUpload",
+                uploadAsync: true,
+                minFileCount: 1,
+                maxFileCount: 5,
+                overwriteInitial: false,
+                overwriteInitial: false,
+                initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+                initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+
+                uploadExtraData: {
+                    img_key: "1000",
+                    img_keywords: "happy, places",
+                },
+            });
+        }
+    </script>
+}
